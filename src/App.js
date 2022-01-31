@@ -48,7 +48,7 @@ function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   // 1. Set State variable that control the input
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   // Object.keys() returns an array of strings which are values of specific key of the object
@@ -124,29 +124,6 @@ function App() {
     });
   }
 
-  // Function which edits the data "PATCH"
-  function handleEdit() {
-    async function editGuest() {
-      const response = await fetch(`${baseUrl}/${checkboxKeys}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          attending: true,
-        }),
-      });
-
-      const updatedGuest = await response.json();
-
-      window.location.reload();
-      return updatedGuest;
-    }
-    editGuest().catch((error) => {
-      console.error(error);
-    });
-  }
-
   return (
     <div className="bodyContainer" data-test-id="guest">
       <header>
@@ -154,7 +131,7 @@ function App() {
       </header>
       <section css={mainStyle}>
         <div>
-          <h2>Would like to invite: </h2>
+          <h2>Would like to invite </h2>
 
           {/* Guests First and Last Name Input */}
           <form onSubmit={handleSubmit}>
@@ -170,39 +147,38 @@ function App() {
               id="lastName"
               onChange={(e) => setLastName(e.target.value)}
             />
-            <button css={button}>Submit</button>
+            <button css={button}>Add Guest</button>
           </form>
         </div>
         <div>
           {/* Guest list Table */}
-          <h2> Guest list:</h2>
+          <h2> Guest list</h2>
           <table css={table}>
             <tbody>
               <tr>
-                <th css={title}>Check</th>
-                <th css={title}>Guest Name</th>
                 <th css={title}>Attending</th>
+                <th css={title}>Guest Name</th>
               </tr>
-              {guestList.map((item) => (
-                <tr key={item.id}>
+              {guestList.map((guest) => (
+                <tr key={guest.id}>
                   <td>
                     <input
                       type="checkbox"
                       aria-label="attending"
-                      defaultChecked={isChecked[item.id]}
-                      onChange={() => {
-                        setIsChecked({
-                          ...isChecked,
-                          [item.id]: true || false,
+                      checked={isChecked[guest.id]}
+                      // onClick={(e) => handleEdit(e)}
+                      onChange={(e) => {
+                        setIsChecked(e.currentTarget.checked, {
+                          ...(isChecked ? [guest.id] : false),
                         });
+                        console.log(isChecked);
                       }}
                     />
                   </td>
                   <td>
                     {' '}
-                    {item.firstName} {item.lastName}{' '}
+                    {guest.firstName} {guest.lastName}{' '}
                   </td>
-                  <td>{`*${item.attending}`}</td>
                 </tr>
               ))}
             </tbody>
@@ -211,7 +187,7 @@ function App() {
           <button
             css={button}
             type="button"
-            onClick={(item) => handleDelete(item.id)}
+            onClick={(guest) => handleDelete(guest.id)}
             aria-label="Remove"
           >
             Remove
