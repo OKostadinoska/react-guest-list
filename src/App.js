@@ -43,9 +43,7 @@ const table = css`
 
 function App() {
   // Define the guestList array
-
   const [guestList, setGuestList] = useState();
-
   // Guest List input fields
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -57,7 +55,6 @@ function App() {
   const checkboxKeys = Object.keys(isChecked);
 
   // fetch gets API from the server, will rerender nonStop, in this case runs only once because of useEffect
-  // From GIT "GET"
   useEffect(() => {
     const getList = async () => {
       const response = await fetch(`${baseUrl}/`);
@@ -109,7 +106,7 @@ function App() {
     });
   }
 
-  // Delete button is clicked: From GIT "DELETE"
+  // Delete button is clicked "DELETE"
 
   function handleDelete() {
     async function deleteGuest() {
@@ -127,7 +124,7 @@ function App() {
     });
   }
 
-  // Function which edits the data from GIT. "PATCH"
+  // Function which edits the data "PATCH"
   function handleEdit() {
     async function editGuest() {
       const response = await fetch(`${baseUrl}/${checkboxKeys}`, {
