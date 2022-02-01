@@ -167,7 +167,7 @@ function App() {
             <button css={button}>Add guest</button>
           </form>
         </div>
-        <div text="Loading...">
+        <div>
           {/* Guest list Table */}
 
           <table css={table}>
@@ -176,6 +176,7 @@ function App() {
                 <th css={title}>Attending</th>
                 <th css={title}>Guest Name</th>
               </tr>
+
               {isLoading ? 'Loading...' : ''}
 
               {guestList.map((guest) => {
