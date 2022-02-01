@@ -86,7 +86,7 @@ function App() {
 
       const createdGuest = await response.json();
       console.log(createdGuest);
-      window.location.reload();
+
       return createdGuest;
     }
 
@@ -111,7 +111,6 @@ function App() {
       const updatedGuest = await response.json();
       console.log(updatedGuest);
 
-      window.location.reload();
       return updatedGuest;
     }
     updateGuestStatus().catch((error) => {
@@ -129,7 +128,6 @@ function App() {
       const deletedGuest = await response.json();
       console.log(deletedGuest);
 
-      window.location.reload();
       return deletedGuest;
     }
     deleteGuest().catch((error) => {
