@@ -167,7 +167,7 @@ function App() {
             <button css={button}>Add guest</button>
           </form>
         </div>
-        <div>
+        <div text="Loading...">
           {/* Guest list Table */}
 
           <table css={table}>
