@@ -8,11 +8,15 @@ const mainBody = css`
   min-height: 90vh;
   justify-content: center;
 `;
-
+const headerTitle = css`
+  background-color: aliceblue;
+`;
 const inputTheGuest = css`
   line-height: 35px;
   margin-bottom: 15px;
   margin-top: 0.4rem;
+  padding-left: 5rem;
+  border-radius: 0.5rem;
 `;
 
 const title = css`
@@ -20,6 +24,7 @@ const title = css`
 `;
 
 const button = css`
+  background-color: #957dad;
   font-weight: bold;
   letter-spacing: 1px;
   font-size: 14px;
@@ -29,6 +34,7 @@ const button = css`
 
 const table = css`
   min-width: 30%;
+  margin-top: 3rem;
   margin-left: auto;
   margin-right: auto;
   text-align: center !important;
@@ -36,7 +42,8 @@ const table = css`
   border-spacing: 15px 5px;
   margin-bottom: 25px;
   padding: 30px;
-  border: 0.1rem solid rgb(0, 100, 0);
+  border: 0.1rem solid #e4eade;
+  border-radius: 0.2rem;
 `;
 
 function App() {
@@ -144,20 +151,20 @@ function App() {
 
   return (
     <div className="bodyContainer" data-test-id="guest">
-      <h1>GUEST LIST</h1>
+      <h1 css={headerTitle}>GUEST LIST</h1>
       <section css={mainBody}>
         <div>
           <h2>Would like to invite </h2>
 
           {/* Guests First and Last Name Input */}
           <form onSubmit={handleSubmit}>
-            <span>First name </span>
+            <span> First name </span>
             <input
               css={inputTheGuest}
               id="firstName"
               onChange={(e) => setFirstName(e.target.value)}
             />
-            <span>Last name </span>
+            <span> Last name </span>
             <input
               css={inputTheGuest}
               id="lastName"
@@ -168,7 +175,7 @@ function App() {
         </div>
         <div>
           {/* Guest list Table */}
-          <h2> Guest list</h2>
+
           <table css={table}>
             <tbody>
               <tr>
