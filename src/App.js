@@ -147,15 +147,16 @@ function App() {
           {/* Guests First and Last Name Input */}
           <form onSubmit={handleSubmit}>
             <span> First name </span>
+
             <input
               css={inputTheGuest}
-              id="firstName"
+              label="First name"
               onChange={(e) => setFirstName(e.target.value)}
             />
             <span> Last name </span>
             <input
               css={inputTheGuest}
-              id="lastName"
+              label="Last name"
               onChange={(e) => setLastName(e.target.value)}
             />
             <button css={button}>Add Guest</button>
