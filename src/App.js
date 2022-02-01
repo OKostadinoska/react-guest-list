@@ -47,7 +47,7 @@ const table = css`
 `;
 
 function App() {
-  const baseUrl = 'http://api-guest-list.herokuapp.com/guests';
+  const baseUrl = 'http://api-guest-list.herokuapp.com';
   // Define the guestList array
   const [guestList, setGuestList] = useState([]);
   // Guest List input fields
@@ -58,7 +58,7 @@ function App() {
 
   useEffect(() => {
     const getGuestList = async () => {
-      const response = await fetch(`${baseUrl}/`);
+      const response = await fetch(`${baseUrl}/guests`);
       const guestsData = await response.json();
       setGuestList(guestsData);
       setIsLoading(false);
@@ -73,7 +73,7 @@ function App() {
 
     // Create a new guest with POST method
     async function addNewGuest() {
-      const response = await fetch(`${baseUrl}/`, {
+      const response = await fetch(`${baseUrl}/guests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ function App() {
   // Update guest status with PUT method
   function handleUpdate(id, attending) {
     async function updateGuestStatus() {
-      const response = await fetch(`${baseUrl}/${id}`, {
+      const response = await fetch(`${baseUrl}/guests/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ function App() {
   // Delete guest with DELETE method
   function handleDelete(id) {
     async function deleteGuest() {
-      const response = await fetch(`${baseUrl}/${id}`, {
+      const response = await fetch(`${baseUrl}/guests/${id}`, {
         method: 'DELETE',
       });
 
