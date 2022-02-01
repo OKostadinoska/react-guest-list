@@ -68,18 +68,6 @@ function App() {
     });
   }, []);
 
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        Loading...
-      </div>
-    );
-  }
-
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -175,7 +163,7 @@ function App() {
         </div>
         <div>
           {/* Guest list Table */}
-
+          {isLoading ? 'Loading...' : ''}
           <table css={table}>
             <tbody>
               <tr>
