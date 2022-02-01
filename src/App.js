@@ -146,8 +146,8 @@ function App() {
 
           {/* Guests First and Last Name Input */}
           <form onSubmit={handleSubmit}>
-            First name
             <label>
+              First name
               <input
                 css={inputTheGuest}
                 label="First name"
