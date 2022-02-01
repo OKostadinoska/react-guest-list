@@ -54,14 +54,14 @@ function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getGuestList = async () => {
       const response = await fetch(`${baseUrl}/guests`);
       const guestsData = await response.json();
       setGuestList(guestsData);
-      setIsLoading(true);
+      setIsLoading(false);
     };
     getGuestList().catch((error) => {
       console.error(error);
@@ -151,8 +151,8 @@ function App() {
               <input
                 css={inputTheGuest}
                 label="First name"
-                disabled={!isLoading}
-                onChange={(e) => setFirstName(e.target.value)}
+                disabled={isLoading}
+                onChange={(event) => setFirstName(event.target.value)}
               />
             </label>
             <label text="Last name">
@@ -160,11 +160,11 @@ function App() {
               <input
                 css={inputTheGuest}
                 label="Last name"
-                disabled={!isLoading}
-                onChange={(e) => setLastName(e.target.value)}
+                disabled={isLoading}
+                onChange={(event) => setLastName(event.target.value)}
               />
             </label>
-            <button css={button}>Add Guest</button>
+            <button css={button}>Add guest</button>
           </form>
         </div>
         <div>
@@ -176,7 +176,7 @@ function App() {
                 <th css={title}>Attending</th>
                 <th css={title}>Guest Name</th>
               </tr>
-              {!isLoading ? 'Loading...' : ''}
+              {isLoading ? 'Loading...' : ''}
               {guestList.map((guest) => {
                 return (
                   <tr key={guest.id}>
