@@ -47,7 +47,7 @@ const table = css`
 `;
 
 function App() {
-  const baseUrl = 'http://api-guest-list.herokuapp.com';
+  const baseUrl = 'https://api-guest-list.herokuapp.com';
   // Define the guestList array
   const [guestList, setGuestList] = useState([]);
   // Guest List input fields
@@ -177,6 +177,7 @@ function App() {
                 <th css={title}>Guest Name</th>
               </tr>
               {isLoading ? 'Loading...' : ''}
+
               {guestList.map((guest) => {
                 return (
                   <tr key={guest.id}>
