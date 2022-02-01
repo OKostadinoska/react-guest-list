@@ -54,14 +54,14 @@ function App() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getGuestList = async () => {
       const response = await fetch(`${baseUrl}/guests`);
       const guestsData = await response.json();
       setGuestList(guestsData);
-      setIsLoading(false);
+      setIsLoading(true);
     };
     getGuestList().catch((error) => {
       console.error(error);
@@ -151,14 +151,16 @@ function App() {
               <input
                 css={inputTheGuest}
                 label="First name"
+                disabled={!isLoading}
                 onChange={(e) => setFirstName(e.target.value)}
               />
             </label>
-            <label>
+            <label text="Last name">
               Last name
               <input
                 css={inputTheGuest}
                 label="Last name"
+                disabled={!isLoading}
                 onChange={(e) => setLastName(e.target.value)}
               />
             </label>
