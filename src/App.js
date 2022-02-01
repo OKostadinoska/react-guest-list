@@ -3,9 +3,7 @@ import './App.css';
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 
-const baseUrl = 'http://api-guest-list.herokuapp.com/guests';
-
-const mainStyle = css`
+const mainBody = css`
   width: auto;
   min-height: 90vh;
   justify-content: center;
@@ -42,27 +40,23 @@ const table = css`
 `;
 
 function App() {
+  const baseUrl = 'http://api-guest-list.herokuapp.com/guests';
   // Define the guestList array
-  const [guestList, setGuestList] = useState();
+  const [guestList, setGuestList] = useState([]);
   // Guest List input fields
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  // 1. Set State variable that control the input
-  const [isChecked, setIsChecked] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Object.keys() returns an array of strings which are values of specific key of the object
-  const checkboxKeys = Object.keys(isChecked);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // fetch gets API from the server, will rerender nonStop, in this case runs only once because of useEffect
   useEffect(() => {
-    const getList = async () => {
+    const getGuestList = async () => {
       const response = await fetch(`${baseUrl}/`);
-      const data = await response.json();
-      setGuestList(data);
+      const guestsData = await response.json();
+      setGuestList(guestsData);
       setIsLoading(false);
     };
-    getList().catch((error) => {
+    getGuestList().catch((error) => {
       console.error(error);
     });
   }, []);
@@ -79,12 +73,11 @@ function App() {
     );
   }
 
-  // when Submit button is clicked
   function handleSubmit(e) {
     e.preventDefault();
 
-    // create a new guest "POST"
-    async function newGuest() {
+    // Create a new guest with POST method
+    async function addNewGuest() {
       const response = await fetch(`${baseUrl}/`, {
         method: 'POST',
         headers: {
@@ -97,24 +90,49 @@ function App() {
       });
 
       const createdGuest = await response.json();
+      console.log(createdGuest);
       window.location.reload();
       return createdGuest;
     }
 
-    newGuest().catch((error) => {
+    addNewGuest().catch((error) => {
       console.error(error);
     });
   }
 
-  // Delete button is clicked "DELETE"
+  // Update guest status with PUT method
+  function handleUpdate(id, attending) {
+    async function updateGuestStatus() {
+      const response = await fetch(`${baseUrl}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          attending: !attending,
+        }),
+      });
 
-  function handleDelete() {
+      const updatedGuest = await response.json();
+      console.log(updatedGuest);
+
+      window.location.reload();
+      return updatedGuest;
+    }
+    updateGuestStatus().catch((error) => {
+      console.error(error);
+    });
+  }
+
+  // Delete guest with DELETE method
+  function handleDelete(id) {
     async function deleteGuest() {
-      const response = await fetch(`${baseUrl}/${checkboxKeys}`, {
+      const response = await fetch(`${baseUrl}/${id}`, {
         method: 'DELETE',
       });
 
       const deletedGuest = await response.json();
+      console.log(deletedGuest);
 
       window.location.reload();
       return deletedGuest;
@@ -126,10 +144,8 @@ function App() {
 
   return (
     <div className="bodyContainer" data-test-id="guest">
-      <header>
-        <h1>GUEST LIST</h1>
-      </header>
-      <section css={mainStyle}>
+      <h1>GUEST LIST</h1>
+      <section css={mainBody}>
         <div>
           <h2>Would like to invite </h2>
 
@@ -159,39 +175,39 @@ function App() {
                 <th css={title}>Attending</th>
                 <th css={title}>Guest Name</th>
               </tr>
-              {guestList.map((guest) => (
-                <tr key={guest.id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      aria-label="attending"
-                      checked={isChecked[guest.id]}
-                      // onClick={(e) => handleEdit(e)}
-                      onChange={(e) => {
-                        setIsChecked(e.currentTarget.checked, {
-                          ...(isChecked ? [guest.id] : false),
-                        });
-                        console.log(isChecked);
-                      }}
-                    />
-                  </td>
-                  <td>
-                    {' '}
-                    {guest.firstName} {guest.lastName}{' '}
-                  </td>
-                </tr>
-              ))}
+              {guestList.map((guest) => {
+                return (
+                  <tr key={guest.id}>
+                    <td>
+                      {guest.attending ? 'Attending' : 'Not attending'}
+                      <input
+                        type="checkbox"
+                        aria-label="attending"
+                        checked={guest.attending}
+                        onChange={() => {
+                          handleUpdate(guest.id, guest.attending);
+                          console.log(guest);
+                        }}
+                      />
+                    </td>
+
+                    <td>
+                      {' '}
+                      {guest.firstName} {guest.lastName}{' '}
+                    </td>
+                    <button
+                      css={button}
+                      type="button"
+                      onClick={() => handleDelete(guest.id)}
+                      aria-label="Remove"
+                    >
+                      Remove
+                    </button>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
-
-          <button
-            css={button}
-            type="button"
-            onClick={(guest) => handleDelete(guest.id)}
-            aria-label="Remove"
-          >
-            Remove
-          </button>
         </div>
       </section>
     </div>
