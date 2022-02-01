@@ -169,13 +169,14 @@ function App() {
         </div>
         <div>
           {/* Guest list Table */}
-          {isLoading ? 'Loading...' : ''}
+
           <table css={table}>
             <tbody>
               <tr>
                 <th css={title}>Attending</th>
                 <th css={title}>Guest Name</th>
               </tr>
+              {!isLoading ? 'Loading...' : ''}
               {guestList.map((guest) => {
                 return (
                   <tr key={guest.id}>
