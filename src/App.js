@@ -100,14 +100,15 @@ function App() {
       updatedList.push(createdGuest);
       setGuestList(updatedList);
 
-      return createdGuest;
+      setFirstName('');
+      setLastName('');
+
+      // return createdGuest;
     }
 
     addNewGuest().catch((error) => {
       console.error(error);
     });
-    setFirstName('');
-    setLastName('');
   }
 
   // Update guest status with PUT method
@@ -173,6 +174,7 @@ function App() {
           {/* Guests First and Last Name Input */}
           <form onSubmit={handleSubmit}>
             <label text="First name">
+              First name
               <input
                 css={inputTheGuest}
                 label="First name"
@@ -182,6 +184,7 @@ function App() {
               />
             </label>
             <label text="Last name">
+              Last name
               <input
                 css={inputTheGuest}
                 label="Last name"
