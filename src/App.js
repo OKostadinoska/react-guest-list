@@ -143,7 +143,7 @@ function App() {
         <h1 css={headerTitle}>GUEST LIST</h1>
         <section css={mainBody}>
           <form onSubmit={handleSubmit}>
-            <label>
+            <label text="First name">
               First name
               <input
                 value={firstName}
@@ -153,7 +153,7 @@ function App() {
               />
             </label>
 
-            <label>
+            <label text="Last name">
               Last name
               <input
                 value={lastName}
