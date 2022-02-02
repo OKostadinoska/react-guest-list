@@ -25,9 +25,17 @@ const title = css`
 `;
 
 const button = css`
+  background-color: #90ee90;
+  letter-spacing: 1px;
+  font-size: 13px;
+  margin-left: 0.5rem;
+  padding: 10px 20px;
+`;
+
+const buttonRemove = css`
   background-color: #f08080;
   letter-spacing: 1px;
-  font-size: 14px;
+  font-size: 13px;
   margin-left: 0.5rem;
   padding: 10px 20px;
 `;
@@ -218,7 +226,7 @@ function App() {
                       {guest.firstName} {guest.lastName}{' '}
                     </td>
                     <button
-                      css={button}
+                      css={buttonRemove}
                       type="button"
                       onClick={() => handleDelete(guest.id)}
                       aria-label="Remove"
