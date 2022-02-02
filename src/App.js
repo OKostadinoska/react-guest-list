@@ -7,16 +7,17 @@ const mainBody = css`
   width: auto;
   min-height: 90vh;
   justify-content: center;
+  align-items: center;
 `;
-const headerTitle = css`
-  background-color: aliceblue;
-`;
+const headerTitle = css``;
 const inputTheGuest = css`
   line-height: 35px;
   margin-bottom: 15px;
   margin-top: 0.4rem;
+  margin-left: 0.3rem;
   padding-left: 5rem;
   border-radius: 0.5rem;
+  align-items: center;
 `;
 
 const title = css`
@@ -24,8 +25,7 @@ const title = css`
 `;
 
 const button = css`
-  background-color: #957dad;
-  font-weight: bold;
+  background-color: #f08080;
   letter-spacing: 1px;
   font-size: 14px;
   margin-left: 0.5rem;
@@ -56,6 +56,7 @@ function App() {
 
   const [isLoading, setIsLoading] = useState(true);
 
+  // Get list with all guests
   useEffect(() => {
     const getGuestList = async () => {
       const response = await fetch(`${baseUrl}/guests`);
@@ -68,8 +69,8 @@ function App() {
     });
   }, []);
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  function handleSubmit(event) {
+    event.preventDefault();
 
     // Create a new guest with POST method
     async function addNewGuest() {
@@ -87,12 +88,18 @@ function App() {
       const createdGuest = await response.json();
       console.log(createdGuest);
 
+      const updatedList = [...guestList];
+      updatedList.push(createdGuest);
+      setGuestList(updatedList);
+
       return createdGuest;
     }
 
     addNewGuest().catch((error) => {
       console.error(error);
     });
+    setFirstName('');
+    setLastName('');
   }
 
   // Update guest status with PUT method
@@ -111,6 +118,14 @@ function App() {
       const updatedGuest = await response.json();
       console.log(updatedGuest);
 
+      const copyGuests = [...guestList];
+      const guestFound = copyGuests.find((guest) => guest.id === id);
+
+      guestFound.attending = !attending;
+      handleUpdate(guestFound);
+
+      setGuestList(copyGuests);
+
       return updatedGuest;
     }
     updateGuestStatus().catch((error) => {
@@ -127,6 +142,11 @@ function App() {
 
       const deletedGuest = await response.json();
       console.log(deletedGuest);
+
+      const guestsFilter = guestList.filter(
+        (guest) => guest.id !== deletedGuest.id,
+      );
+      setGuestList(guestsFilter);
 
       return deletedGuest;
     }
@@ -145,21 +165,21 @@ function App() {
           {/* Guests First and Last Name Input */}
           <form onSubmit={handleSubmit}>
             <label text="First name">
-              First name
               <input
                 css={inputTheGuest}
                 label="First name"
+                placeholder="First Name"
                 disabled={isLoading}
-                onChange={(event) => setFirstName(event.target.value)}
+                onChange={(event) => setFirstName(event.currentTarget.value)}
               />
             </label>
             <label text="Last name">
-              Last name
               <input
                 css={inputTheGuest}
                 label="Last name"
+                placeholder="First Name"
                 disabled={isLoading}
-                onChange={(event) => setLastName(event.target.value)}
+                onChange={(event) => setLastName(event.currentTarget.value)}
               />
             </label>
             <button css={button}>Add guest</button>
