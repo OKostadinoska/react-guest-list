@@ -136,7 +136,7 @@ function App() {
 
   // Show a loading message if data is not fully fetched from the server
   if (isLoading) {
-    return <div>Loading</div>;
+    return <div>Loading...</div>;
   } else {
     return (
       <div className="bodyContainer" data-test-id="guest">
