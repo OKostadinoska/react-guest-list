@@ -3,13 +3,15 @@ import './App.css';
 import { css } from '@emotion/react';
 import { useEffect, useState } from 'react';
 
+const headerTitle = css``;
+
 const mainBody = css`
   width: auto;
   min-height: 90vh;
   justify-content: center;
   align-items: center;
 `;
-const headerTitle = css``;
+
 const inputTheGuest = css`
   line-height: 35px;
   margin-bottom: 15px;
@@ -32,14 +34,6 @@ const button = css`
   padding: 10px 20px;
 `;
 
-const buttonRemove = css`
-  background-color: #f08080;
-  letter-spacing: 1px;
-  font-size: 13px;
-  margin-left: 0.5rem;
-  padding: 10px 20px;
-`;
-
 const table = css`
   min-width: 30%;
   margin-top: 3rem;
@@ -54,14 +48,23 @@ const table = css`
   border-radius: 0.2rem;
 `;
 
+const buttonRemove = css`
+  background-color: #f08080;
+  letter-spacing: 1px;
+  font-size: 13px;
+  margin-left: 0.5rem;
+  padding: 10px 20px;
+`;
+
 function App() {
   const baseUrl = 'https://api-guest-list.herokuapp.com';
-  // Define the guestList array
-  const [guestList, setGuestList] = useState([]);
+  // Define the allData
+  const [guestList, setGuestList] = useState();
   // Guest List input fields
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-
+  // Define newUser
+  const [newUser, setNewUser] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   // Get list with all guests
@@ -75,176 +78,142 @@ function App() {
     getGuestList().catch((error) => {
       console.error(error);
     });
-  }, []);
+  }, [newUser]);
 
-  function handleSubmit(event) {
-    event.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
 
     // Create a new guest with POST method
-    async function addNewGuest() {
+    const addNewGuest = async () => {
       const response = await fetch(`${baseUrl}/guests`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          firstName: firstName,
-          lastName: lastName,
-        }),
+        body: JSON.stringify({ firstName: firstName, lastName: lastName }),
       });
-
       const createdGuest = await response.json();
-      console.log(createdGuest);
-
-      const updatedList = [...guestList];
-      updatedList.push(createdGuest);
-      setGuestList(updatedList);
-
       setFirstName('');
       setLastName('');
-
-      // return createdGuest;
-    }
-
+      setNewUser(createdGuest);
+    };
     addNewGuest().catch((error) => {
-      console.error(error);
-    });
-  }
-
-  // Update guest status with PUT method
-  function handleUpdate(id, attending) {
-    async function updateGuestStatus() {
-      const response = await fetch(`${baseUrl}/guests/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          attending: !attending,
-        }),
-      });
-
-      const updatedGuest = await response.json();
-      console.log(updatedGuest);
-
-      const copyGuests = [...guestList];
-      const guestFound = copyGuests.find((guest) => guest.id === id);
-
-      guestFound.attending = !attending;
-      handleUpdate(guestFound);
-
-      setGuestList(copyGuests);
-
-      return updatedGuest;
-    }
-    updateGuestStatus().catch((error) => {
       console.error(error);
     });
   }
 
   // Delete guest with DELETE method
   function handleDelete(id) {
-    async function deleteGuest() {
+    const deleteGuest = async () => {
       const response = await fetch(`${baseUrl}/guests/${id}`, {
         method: 'DELETE',
       });
-
-      const deletedGuest = await response.json();
-      console.log(deletedGuest);
-
-      const guestsFilter = guestList.filter(
-        (guest) => guest.id !== deletedGuest.id,
-      );
-      setGuestList(guestsFilter);
-
-      return deletedGuest;
-    }
+      const deletedUser = await response.json();
+      setNewUser(deletedUser);
+    };
     deleteGuest().catch((error) => {
       console.error(error);
     });
   }
 
-  return (
-    <div className="bodyContainer" data-test-id="guest">
-      <h1 css={headerTitle}>GUEST LIST</h1>
-      <section css={mainBody}>
-        <div>
-          <h2>Would like to invite </h2>
+  // Update guest status with PUT method
+  function handleUpdate(id) {
+    const updateGuestStatus = async () => {
+      const response = await fetch(`${baseUrl}/guests/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ attending: true }),
+      });
+      const updatedGuest = await response.json();
+      setNewUser(updatedGuest);
+    };
+    updateGuestStatus().catch((error) => {
+      console.error(error);
+    });
+  }
 
-          {/* Guests First and Last Name Input */}
+  // Show a loading message if data is not fully fetched from the server
+  if (isLoading) {
+    return <div>Loading</div>;
+  } else {
+    return (
+      <div className="bodyContainer" data-test-id="guest">
+        <h1 css={headerTitle}>GUEST LIST</h1>
+        <section css={mainBody}>
           <form onSubmit={handleSubmit}>
-            <label text="First name">
+            <label>
               First name
               <input
+                value={firstName}
                 css={inputTheGuest}
-                label="First name"
-                placeholder="First Name"
                 disabled={isLoading}
                 onChange={(event) => setFirstName(event.currentTarget.value)}
               />
             </label>
-            <label text="Last name">
+
+            <label>
               Last name
               <input
+                value={lastName}
                 css={inputTheGuest}
-                label="Last name"
-                placeholder="First Name"
                 disabled={isLoading}
                 onChange={(event) => setLastName(event.currentTarget.value)}
               />
             </label>
+
             <button css={button}>Add guest</button>
           </form>
-        </div>
-        <div>
-          {/* Guest list Table */}
-
-          <table css={table}>
-            <tbody>
-              <tr>
-                <th css={title}>Attending</th>
-                <th css={title}>Guest Name</th>
-              </tr>
-
-              {isLoading ? 'Loading...' : ''}
-
-              {guestList.map((guest) => {
-                return (
-                  <tr key={guest.id}>
-                    <td>
-                      {guest.attending ? 'Attending' : 'Not attending'}
-                      <input
-                        type="checkbox"
-                        aria-label="attending"
-                        checked={guest.attending}
-                        onChange={() => {
-                          handleUpdate(guest.id, guest.attending);
-                          console.log(guest);
-                        }}
-                      />
-                    </td>
-
-                    <td>
-                      {' '}
-                      {guest.firstName} {guest.lastName}{' '}
-                    </td>
-                    <button
-                      css={buttonRemove}
-                      type="button"
-                      onClick={() => handleDelete(guest.id)}
-                      aria-label="Remove"
-                    >
-                      Remove
-                    </button>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
-  );
+          <div>
+            {/* Guest list Table */}
+            <table css={table}>
+              <thead>
+                <tr>
+                  <th css={title}>Attending</th>
+                  <th css={title}>Guest Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {guestList.map((guest) => {
+                  return (
+                    <tr key={guest.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          aria-label="Attending"
+                          defaultChecked={guest.attending}
+                          onChange={() => {
+                            handleUpdate(guest.id, guest.attending);
+                            console.log(guest);
+                          }}
+                        />
+                      </td>
+                      <td>
+                        {guest.firstName} {guest.lastName}{' '}
+                      </td>
+                      <td>
+                        <button
+                          css={buttonRemove}
+                          type="button"
+                          aria-label="Remove"
+                          onClick={() => {
+                            handleDelete(guest.id);
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    );
+  }
 }
 
 export default App;
