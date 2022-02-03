@@ -165,7 +165,7 @@ function App() {
 
             <button css={button}>Add guest</button>
           </form>
-          <div>
+          <div data-test-id="guest">
             {/* Guest list Table */}
             <table css={table}>
               <thead>
@@ -180,6 +180,7 @@ function App() {
                     <tr key={guest.id}>
                       <td>
                         <input
+                          data-test-id="guest"
                           type="checkbox"
                           aria-label="Attending"
                           defaultChecked={guest.attending}
